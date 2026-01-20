@@ -128,6 +128,21 @@ INSERT INTO Crop VALUES (702, 'Wheat', 'Winter', 102);
 INSERT INTO Crop_Report VALUES (801, 701, '2025-07-05', 'Healthy', 'No issues found.'); 
 INSERT INTO Crop_Report VALUES (802, 702, '2025-07-06', 'Average', 'Mild pest signs.'); 
 
+
 -- Subscriptions 
 INSERT INTO Subscription VALUES (901, 1, '2025-06-01', '2026-06-01', 'Pro'); 
 INSERT INTO Subscription VALUES (902, 2, '2025-05-01', '2026-05-01', 'Basic');
+
+SELECT 
+f.FName, f.LName, fa.Name AS FarmName
+FROM Farmer f JOIN Farm fa ON f.FarmerID = fa.FarmerID;
+
+SELECT 
+fa.Name AS FarmName, s.Type AS SensorType
+FROM Farm fa JOIN Sensor s ON fa.FarmID = s.FarmID;
+
+SELECT 
+s.Type, sd.ReadingValue, sd.ReadingDate
+FROM Sensor s JOIN Sensor_Data sd ON s.SensorID = sd.SensorID;
+
+
