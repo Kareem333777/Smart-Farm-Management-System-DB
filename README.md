@@ -1,2 +1,133 @@
-# Smart-Farm-Management-System-DB
-Smart Farm Management System – Database Design  This project represents a database design for a smart farm management system. It includes: - ERD (conceptual design) - Relational mapping - SQL implementation (tables, relationships, and sample data)  Technologies: - SQL - Relational Database Design
+-- Farmer  
+CREATE TABLE Farmer ( 
+    FarmerID INT PRIMARY KEY, 
+    FName VARCHAR(50), 
+    LName VARCHAR(50), 
+    Email VARCHAR(100)  ); 
+ -- Multi-valued Phone Numbers (1:N) 
+CREATE TABLE FarmerPhone ( 
+    FarmerID INT, 
+    Phone VARCHAR(20), 
+    FOREIGN KEY (FarmerID) REFERENCES Farmer(FarmerID)  ); 
+ -- Farm 
+CREATE TABLE Farm ( 
+    FarmID INT PRIMARY KEY, 
+    Name VARCHAR(100), 
+    City VARCHAR(50), 
+    Region VARCHAR(50), 
+    Size FLOAT, 
+    FarmerID INT, 
+    FOREIGN KEY (FarmerID) REFERENCES Farmer(FarmerID)  ); 
+ 
+ -- Engineer 
+CREATE TABLE Engineer ( 
+    EngineerID INT PRIMARY KEY, 
+    FName VARCHAR(50), 
+    LName VARCHAR(50), 
+    Specialty VARCHAR(100), 
+    Email VARCHAR(100)  ); 
+    
+ -- Visit  
+CREATE TABLE Visit ( 
+    VisitID INT PRIMARY KEY, 
+    EngineerID INT, 
+    FarmID INT, 
+    VisitDate DATE, 
+    Purpose TEXT, 
+    FOREIGN KEY (EngineerID) REFERENCES Engineer(EngineerID), 
+    FOREIGN KEY (FarmID) REFERENCES Farm(FarmID) ); 
+ 
+ -- Advice  
+CREATE TABLE Advice ( 
+    AdviceID INT PRIMARY KEY, 
+    VisitID INT, 
+    AdviceText TEXT, 
+    AdviceDate DATE, 
+    FOREIGN KEY (VisitID) REFERENCES Visit(VisitID)  ); 
+    
+ -- Sensor  
+CREATE TABLE Sensor ( 
+    SensorID INT PRIMARY KEY, 
+    Type VARCHAR(50), 
+    InstallationDate DATE, 
+    FarmID INT, 
+    FOREIGN KEY (FarmID) REFERENCES Farm(FarmID)  ); 
+    
+ -- Sensor_Data  
+CREATE TABLE Sensor_Data ( 
+    DataID INT PRIMARY KEY, 
+    SensorID INT, 
+    ReadingValue FLOAT, 
+    ReadingDate DATE, 
+    FOREIGN KEY (SensorID) REFERENCES Sensor(SensorID) ); 
+ 
+ -- Crop  
+CREATE TABLE Crop ( 
+    CropID INT PRIMARY KEY, 
+    Name VARCHAR(100), 
+    Season VARCHAR(50), 
+    FarmID INT, 
+    FOREIGN KEY (FarmID) REFERENCES Farm(FarmID)  ); 
+    
+ -- Crop_Report 
+CREATE TABLE Crop_Report ( 
+    ReportID INT PRIMARY KEY, 
+    CropID INT, 
+    ReportDate DATE, 
+    HealthStatus VARCHAR(100), 
+    Notes TEXT, 
+    FOREIGN KEY (CropID) REFERENCES Crop(CropID)  ); 
+    
+ -- Subscription 
+CREATE TABLE Subscription ( 
+    SubscriptionID INT PRIMARY KEY, 
+    FarmerID INT UNIQUE, 
+    StartDate DATE, 
+    EndDate DATE, 
+    PlanType VARCHAR(50), 
+    FOREIGN KEY (FarmerID) REFERENCES Farmer(FarmerID)  ); 
+    
+-- Farmers 
+INSERT INTO Farmer VALUES (1, 'Ali', 'Mahmoud', 'ali@gmail.com'); 
+INSERT INTO Farmer VALUES (2, 'Mona', 'Said', 'mona@gmail.com');
+
+-- Farmer Phones 
+INSERT INTO FarmerPhone VALUES (1, '01012345678'); 
+INSERT INTO FarmerPhone VALUES (1, '01011112222'); 
+INSERT INTO FarmerPhone VALUES (2, '01098765432');
+
+-- Farms 
+INSERT INTO Farm VALUES (101, 'Green Valley', 'Giza', 'Upper Egypt', 20.5, 1); 
+INSERT INTO Farm VALUES (102, 'Sun Farm', 'Minya', 'Upper Egypt', 15.0, 2);
+
+-- Engineers 
+INSERT INTO Engineer VALUES (201, 'Sameh', 'Ali', 'Soil Expert', 'sameh@gmail.com'); 
+INSERT INTO Engineer VALUES (202, 'Laila', 'Ibrahim', 'Water Management', 'laila@gmail.com');
+
+-- Visits 
+INSERT INTO Visit VALUES (301, 201, 101, '2025-07-01', 'Soil inspection'); 
+INSERT INTO Visit VALUES (302, 202, 102, '2025-07-02', 'Water analysis');
+
+-- Advice 
+INSERT INTO Advice VALUES (401, 301, 'Improve soil with compost.', '2025-07-01'); 
+INSERT INTO Advice VALUES (402, 302, 'Reduce irrigation frequency.', '2025-07-02'); 
+
+-- Sensors 
+INSERT INTO Sensor VALUES (501, 'Moisture', '2025-06-01', 101); 
+INSERT INTO Sensor VALUES (502, 'Temperature', '2025-06-10', 102);
+
+-- Sensor Data 
+INSERT INTO Sensor_Data VALUES (601, 501, 23.5, '2025-07-01'); 
+INSERT INTO Sensor_Data VALUES (602, 502, 35.2, '2025-07-02');
+
+-- Crops 
+INSERT INTO Crop VALUES (701, 'Tomato', 'Summer', 101); 
+INSERT INTO Crop VALUES (702, 'Wheat', 'Winter', 102); 
+
+-- Crop Reports 
+INSERT INTO Crop_Report VALUES (801, 701, '2025-07-05', 'Healthy', 'No issues found.'); 
+INSERT INTO Crop_Report VALUES (802, 702, '2025-07-06', 'Average', 'Mild pest signs.'); 
+
+-- Subscriptions 
+INSERT INTO Subscription VALUES (901, 1, '2025-06-01', '2026-06-01', 'Pro'); 
+INSERT INTO Subscription VALUES (902, 2, '2025-05-01', '2026-05-01', 'Basic');
